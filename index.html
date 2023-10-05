@@ -6,21 +6,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        html,body{
-            margin:0;
-            padding:0;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
         }
 
-        #viewer-iframe{
-            height:100vh;
-            width:100vw;
-            border:none;
+        #viewer-iframe {
+            height: 80vh;
+            width: 100vw;
+            border: none;
         }
     </style>
 </head>
 
 <body>
-    <iframe id="viewer-iframe" src="https://beehive2-viewer-latest.cw.substance3d.io/"  allowfullscreen="" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true"></iframe>
+    <iframe id="viewer-iframe" src="https://beehive2-viewer-latest.cw.substance3d.io/"></iframe>
+
+    <div>
+        <button class="button">Click me to fullscreen the iframe</button>
+    </div>
 </body>
+
+<script>
+    var button = document.querySelector('.button');
+    button.addEventListener('click', fullscreen);
+    // when you are in fullscreen, ESC and F11 may not be trigger by keydown listener. 
+    // so don't use it to detect exit fullscreen
+    document.addEventListener('keydown', function (e) {
+        console.log('key press' + e.keyCode);
+    });
+    // detect enter or exit fullscreen mode
+    document.addEventListener('webkitfullscreenchange', fullscreenChange);
+    document.addEventListener('mozfullscreenchange', fullscreenChange);
+    document.addEventListener('fullscreenchange', fullscreenChange);
+    document.addEventListener('MSFullscreenChange', fullscreenChange);
+
+    function fullscreen() {
+        // check if fullscreen mode is available
+        if (document.fullscreenEnabled ||
+            document.webkitFullscreenEnabled ||
+            document.mozFullScreenEnabled ||
+            document.msFullscreenEnabled) {
+
+            // which element will be fullscreen
+            var iframe = document.querySelector('#viewer-iframe');
+            // Do fullscreen
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) {
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.mozRequestFullScreen) {
+                iframe.mozRequestFullScreen();
+            } else if (iframe.msRequestFullscreen) {
+                iframe.msRequestFullscreen();
+            }
+        }
+        else {
+            document.querySelector('.error').innerHTML = 'Your browser is not supported';
+        }
+    }
+
+    function fullscreenChange() {
+        if (document.fullscreenEnabled ||
+            document.webkitIsFullScreen ||
+            document.mozFullScreen ||
+            document.msFullscreenElement) {
+            console.log('enter fullscreen');
+        }
+        else {
+            console.log('exit fullscreen');
+        }
+    }
+</script>
 
 </html>
